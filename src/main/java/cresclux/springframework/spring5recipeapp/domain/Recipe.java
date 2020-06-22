@@ -2,7 +2,6 @@ package cresclux.springframework.spring5recipeapp.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,8 +21,6 @@ public class Recipe {
     private String source;
     private String url;
     private String directions;
-    //TODO
-//    private Difficulty difficulty;
 
     @Lob //will be saved as BLOB in DB
     private Byte[] image;
@@ -34,6 +31,9 @@ public class Recipe {
     // mappedBy will tell in which attribute of the child, the Recipe will get saved
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredientSet;
+
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
 
     public Long getId() {
         return id;
@@ -125,5 +125,13 @@ public class Recipe {
 
     public void setIngredientSet(Set<Ingredient> ingredientSet) {
         this.ingredientSet = ingredientSet;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 }
