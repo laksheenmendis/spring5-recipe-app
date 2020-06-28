@@ -20,6 +20,8 @@ public class Recipe {
     private Integer servings;
     private String source;
     private String url;
+
+    @Lob
     private String directions;
 
     @Lob //will be saved as BLOB in DB
@@ -30,7 +32,7 @@ public class Recipe {
 
     // mappedBy will tell in which attribute of the child, the Recipe will get saved
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredientSet;
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
@@ -39,7 +41,7 @@ public class Recipe {
     @JoinTable(name = "recipe_category", // name of the table
             joinColumns = @JoinColumn(name="recipe_id"), // from this side
             inverseJoinColumns = @JoinColumn(name="category_id")) // from the other side, in this Category
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -119,18 +121,19 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
     }
 
-    public Set<Ingredient> getIngredientSet() {
-        if(ingredientSet == null)
+    public Set<Ingredient> getIngredients() {
+        if(ingredients == null)
         {
-            ingredientSet = new HashSet<>();
+            ingredients = new HashSet<>();
         }
-        return ingredientSet;
+        return ingredients;
     }
 
-    public void setIngredientSet(Set<Ingredient> ingredientSet) {
-        this.ingredientSet = ingredientSet;
+    public void setIngredients(Set<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
     public Difficulty getDifficulty() {
@@ -142,10 +145,20 @@ public class Recipe {
     }
 
     public Set<Category> getCategories() {
+        if(categories == null)
+        {
+            categories = new HashSet<>();
+        }
         return categories;
     }
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
     }
 }
