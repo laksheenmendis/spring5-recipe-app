@@ -121,7 +121,7 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
-        notes.setRecipe(this);
+        notes.setRecipe(this);  // using the setter for JPA Bidirectional relationship
     }
 
     public Set<Ingredient> getIngredients() {
@@ -157,7 +157,7 @@ public class Recipe {
     }
 
     public Recipe addIngredient(Ingredient ingredient){
-        ingredient.setRecipe(this);
+        ingredient.setRecipe(this); // using the setter for JPA Bidirectional relationship
         this.ingredients.add(ingredient);
         return this;
     }
