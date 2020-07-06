@@ -1,10 +1,13 @@
 package cresclux.springframework.spring5recipeapp.domain;
 
+import lombok.*;
 import javax.persistence.*;
 
 /**
  * Created by laksheenmendis on 6/21/20 at 1:34 PM
  */
+@Data
+@EqualsAndHashCode(exclude = {"recipe"})  // because a circular reference is created for bi-directional relationship, and it leads to a stackoverflow error
 @Entity
 public class Notes {
 
@@ -20,27 +23,4 @@ public class Notes {
     @Lob // will be saved as CLOB
     private String recipeNotes;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
-    public String getRecipeNotes() {
-        return recipeNotes;
-    }
-
-    public void setRecipeNotes(String recipeNotes) {
-        this.recipeNotes = recipeNotes;
-    }
 }
