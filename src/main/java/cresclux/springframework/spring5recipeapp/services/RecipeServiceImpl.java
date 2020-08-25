@@ -5,6 +5,7 @@ import cresclux.springframework.spring5recipeapp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -30,6 +31,13 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe findById(Long l) {
-        return recipeRepository.findById(l).get();
+        Optional<Recipe> recipeOpt = recipeRepository.findById(l);
+
+        if(!recipeOpt.isPresent())
+        {
+            throw new RuntimeException("Recipe not found");
+        }
+
+        return recipeOpt.get();
     }
 }
