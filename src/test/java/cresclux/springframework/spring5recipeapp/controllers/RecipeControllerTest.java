@@ -1,5 +1,6 @@
 package cresclux.springframework.spring5recipeapp.controllers;
 
+import cresclux.springframework.spring5recipeapp.commands.RecipeCommand;
 import cresclux.springframework.spring5recipeapp.domain.Recipe;
 import cresclux.springframework.spring5recipeapp.services.RecipeService;
 import org.junit.Before;
@@ -7,15 +8,17 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by laksheenmendis on 8/24/20 at 11:32 PM
@@ -26,19 +29,19 @@ public class RecipeControllerTest {
     RecipeService recipeService;
 
     RecipeController recipeController;
+    MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
     }
 
     @Test
     public void testGetRecipe() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
-
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
         when(recipeService.findById(anyLong())).thenReturn(recipe);
 
@@ -47,4 +50,21 @@ public class RecipeControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
     }
+
+    @Test
+    public void testPostNewRecipeForm() throws Exception {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(2L);
+
+        when(recipeService.saveRecipeCommand(any())).thenReturn(recipeCommand);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("id", "")
+            .param("description", "some string")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipe/2/show"));
+    }
+
 }

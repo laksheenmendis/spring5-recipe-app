@@ -17,6 +17,9 @@
 
 </head>
 <body>
+<!--Below line is not an actual comment, it's a hint to IDE-->
+<!--/*@thymesVar id="recipe" type="cresclux.springframework.spring5recipeapp.domain.Recipe"*/-->
+<!--/*@thymesVar id="recipes" type="java.util.List" */-->
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
@@ -44,11 +47,9 @@
                                 <td>Tasty Goodnees 2</td>
                             </tr>
                             <tr th:each="recipe : ${recipes}">
-                                <!--Below line is not an actual comment, it's a hint to IDE-->
-                                <!--/*@thymesVar id="recipe" type="cresclux.springframework.spring5recipeapp.domain.Recipe"*/-->
                                 <td th:text="${recipe.id}">1</td>
                                 <td th:text="${recipe.description}">Laksheen</td>
-                                <td><a href="#" th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/show/' }">View</a></td>
                             </tr>
                         </table>
                     </div>
