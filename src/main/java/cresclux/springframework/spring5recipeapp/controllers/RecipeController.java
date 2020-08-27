@@ -25,17 +25,23 @@ public class RecipeController {
         return "recipe/show";
     }
 
-    @RequestMapping("/recipe/new")
+    @RequestMapping("recipe/new")
     public String newRecipe(Model model)
     {
         model.addAttribute("recipe", new RecipeCommand());
         return "recipe/recipeform";
     }
 
+    @RequestMapping("recipe/{id}/update")
+    public String updateRecipe(@PathVariable String id, Model model)
+    {
+        model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(id)));
+        return "recipe/recipeform";
+    }
+
 //    @RequestMapping(name="recipe", method = RequestMethod.POST) // this is the old way of doing in Spring 4
     //@ModelAttribute annotation tells spring to bind the form, POST parameters to the RecipeCommand object
-    @PostMapping
-    @RequestMapping("recipe")
+    @PostMapping("recipe")
     public String saveOrUpdate(@ModelAttribute RecipeCommand recipeCommand)
     {
         RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(recipeCommand);
