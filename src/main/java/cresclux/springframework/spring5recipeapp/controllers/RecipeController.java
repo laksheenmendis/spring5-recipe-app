@@ -2,6 +2,7 @@ package cresclux.springframework.spring5recipeapp.controllers;
 
 import cresclux.springframework.spring5recipeapp.commands.RecipeCommand;
 import cresclux.springframework.spring5recipeapp.services.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by laksheenmendis on 8/24/20 at 11:16 PM
  */
+@Slf4j
 @Controller
 public class RecipeController {
 
@@ -18,6 +20,7 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
+    @GetMapping
     @RequestMapping("/recipe/{id}/show")
     public String showById(@PathVariable String id, Model model)
     {
@@ -25,6 +28,7 @@ public class RecipeController {
         return "recipe/show";
     }
 
+    @GetMapping
     @RequestMapping("recipe/new")
     public String newRecipe(Model model)
     {
@@ -32,6 +36,7 @@ public class RecipeController {
         return "recipe/recipeform";
     }
 
+    @GetMapping
     @RequestMapping("recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model)
     {
@@ -47,4 +52,14 @@ public class RecipeController {
         RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(recipeCommand);
         return "redirect:/recipe/" + savedRecipeCommand.getId() + "/show";  // redirect tell Spring MVC to redirect to a specific URL
     }
+
+    @GetMapping("recipe/{id}/delete")
+    public String deleteById(@PathVariable String id)
+    {
+        log.debug("Deleting ID " + id);
+        recipeService.deleteById(Long.valueOf(id));
+
+        return "redirect:/"; // redirects to the index page
+    }
+
 }
